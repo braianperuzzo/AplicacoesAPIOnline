@@ -1,0 +1,76 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "PiperunCrosseling API",
+    "version": "1.6.0",
+    "description": "Endpoint para receber webhook de oportunidade do PipeRun, consultar últimas compras, avaliar o campo Documento para cross-selling em orçamento/pedido e publicar notas na própria oportunidade."
+  },
+  "paths": {
+    "/api/piperun-crosseling/webhook/oportunidade": {
+      "get": {
+        "tags": [
+          "PiperunCrosseling"
+        ],
+        "summary": "Sonda de diagnóstico do webhook",
+        "description": "Verifica se a rota está acessível e informa como enviar o POST real.",
+        "responses": {
+          "200": {
+            "description": "Rota acessível para diagnóstico"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "PiperunCrosseling"
+        ],
+        "summary": "Recebe webhook de oportunidade do PipeRun",
+        "description": "Recebe o payload JSON da oportunidade, processa em background, publica a nota de últimas compras e, quando aplicável, uma nota extra de cross-selling baseada no campo Documento, escolhendo a tabela de estrutura conforme o prefixo OV/PV.",
+        "parameters": [
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Chave de autenticação da API."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "example": {
+                "id": 5678,
+                "title": "Oportunidade Exemplo",
+                "company": {
+                  "name": "CRM PipeRun"
+                },
+                "person": {
+                  "name": "Peter",
+                  "contact_emails": [
+                    {
+                      "address": "contato@empresa.com"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Oportunidade recebida para processamento assíncrono"
+          },
+          "401": {
+            "description": "X-API-Key ausente ou inválido"
+          }
+        }
+      }
+    }
+  }
+}

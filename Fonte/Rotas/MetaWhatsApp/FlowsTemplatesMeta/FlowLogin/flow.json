@@ -1,0 +1,174 @@
+{
+    "version": "7.3",
+    "data_api_version": "3.0",
+    "routing_model": {
+        "LOGIN": [
+            "LOGIN_OK"
+        ],
+        "LOGIN_OK": []
+    },
+    "screens": [
+        {
+            "id": "LOGIN",
+            "title": "🔐 Acesse sua Conta",
+            "data": {
+                "login_failed": {
+                    "type": "boolean",
+                    "__example__": false
+                },
+                "auth_error_text": {
+                    "type": "string",
+                    "__example__": ""
+                },
+                "init_values": {
+                    "type": "object",
+                    "__example__": {}
+                },
+                "error_messages": {
+                    "type": "object",
+                    "__example__": {}
+                }
+            },
+            "layout": {
+                "type": "SingleColumnLayout",
+                "children": [
+                    {
+                        "type": "Form",
+                        "name": "login_form",
+                        "init-values": "${data.init_values}",
+                        "error-messages": "${data.error_messages}",
+                        "children": [
+                            {
+                                "type": "TextSubheading",
+                                "text": "🔐 Faça Login na Área do Cliente IBR"
+                            },
+                            {
+                                "type": "TextBody",
+                                "text": "Para garantir a segurança das suas informações, é necessário acessar as aplicações online da IBR por meio do formulário abaixo. O login é feito com os mesmos dados utilizados em nossas outras plataformas, como o Configurador de Produtos e a Área do Cliente."
+                            },
+                            {
+                                "type": "TextInput",
+                                "required": true,
+                                "label": "Email",
+                                "name": "email",
+                                "input-type": "email",
+                                "helper-text": "Digite o seu email cadastrado."
+                            },
+                            {
+                                "type": "TextInput",
+                                "required": true,
+                                "label": "Senha",
+                                "name": "password",
+                                "input-type": "password",
+                                "helper-text": "Digite sua senha de acesso."
+                            },
+                            {
+                                "type": "EmbeddedLink",
+                                "text": "📝 Cadastro ou 🔑 Nova Senha",
+                                "on-click-action": {
+                                    "name": "open_url",
+                                    "url": "https://www.redutoresibr.com.br/AreaRestrita/Login"
+                                }
+                            },
+                            {
+                                "type": "Image",
+                                "src": "iVBORw0KGgoAAAANSUhEUgAABLAAAAACCAYAAABIbCWiAAAAK0lEQVR42u3QMQ0AMAgAsDH/Ckn48AE2OFoJjayeBwAAAABHfQUAAAAAXLaFZwOeNylDUwAAAABJRU5ErkJggg==",
+                                "width": 1200,
+                                "height": 2
+                            },
+                            {
+                                "type": "TextCaption",
+                                "markdown": true,
+                                "text": "*Ao continuar, você declara que está ciente da Política de Privacidade, dos Termos de Uso e Serviço, da Política de Coleta de Dados e da Política de Cookies da IBR.*"
+                            },
+                            {
+                                "type": "EmbeddedLink",
+                                "text": "🔗 Ver Política da IBR",
+                                "on-click-action": {
+                                    "name": "open_url",
+                                    "url": "https://www.redutoresibr.com.br/pt/politica-de-privacidade"
+                                }
+                            },
+                            {
+                                "type": "Footer",
+                                "label": "Continuar ➜",
+                                "on-click-action": {
+                                    "name": "data_exchange",
+                                    "payload": {
+                                        "tipo_solicitacao": "LOGIN_SITE",
+                                        "email": "${form.email}",
+                                        "password": "${form.password}"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": "LOGIN_OK",
+            "title": "🔐 Acesse sua Conta",
+            "terminal": true,
+            "success": true,
+            "data": {
+                "authenticated": {
+                    "type": "boolean",
+                    "__example__": true
+                },
+                "authenticated_email": {
+                    "type": "string",
+                    "__example__": "cliente@empresa.com.br"
+                },
+                "session_expires_at": {
+                    "type": "string",
+                    "__example__": "2026-04-22T15:30:00Z"
+                },
+                "session_expires_at_text": {
+                    "type": "string",
+                    "__example__": "🔑 Seu acesso ficará válido nesta conversa até: 22/04/2026 às 12:30. Após esse período, será necessário refazer o acesso por segurança."
+                },
+                "success_message": {
+                    "type": "string",
+                    "__example__": "✅ Seu login foi validado com sucesso. Este chat ficará liberado por 24 horas."
+                }
+            },
+            "layout": {
+                "type": "SingleColumnLayout",
+                "children": [
+                    {
+                        "type": "Form",
+                        "name": "login_ok_form",
+                        "children": [
+                            {
+                                "type": "TextSubheading",
+                                "text": "✅ Acesso Realizado"
+                            },
+                            {
+                                "type": "TextBody",
+                                "text": "${data.success_message}"
+                            },
+                            {
+                                "type": "TextCaption",
+                                "text": "${data.session_expires_at_text}"
+                            },
+                            {
+                                "type": "Footer",
+                                "label": "✓ Entrar ",
+                                "on-click-action": {
+                                    "name": "complete",
+                                    "payload": {
+                                        "tipo_solicitacao": "LOGIN_SITE",
+                                        "authenticated": "${data.authenticated}",
+                                        "authenticated_email": "${data.authenticated_email}",
+                                        "session_expires_at": "${data.session_expires_at}"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

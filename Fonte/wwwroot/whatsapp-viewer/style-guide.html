@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IBR WhatsApp Viewer • Style Guide Interno</title>
+  <link rel="stylesheet" href="/whatsapp-viewer/style-guide.css" />
+</head>
+<body>
+  <header class="sg-header">
+    <div>
+      <p class="eyebrow">Referência interna</p>
+      <h1>Design System Operacional — WhatsApp Viewer</h1>
+      <p class="intro">Guia unificado de componentes centrais, variantes oficiais, estados obrigatórios, tokens visuais e padrões de ícones/microcopy para reduzir divergências futuras no produto.</p>
+    </div>
+    <a class="back-link" href="/whatsapp-viewer/">Voltar ao viewer</a>
+  </header>
+
+  <main class="sg-main">
+    <section>
+      <h2>1) Componentes centrais padronizados</h2>
+      <div class="component-showcase">
+        <article class="showcase-block">
+          <h3>Botões (primário, secundário, destrutivo, fantasma)</h3>
+          <div class="showcase-row">
+            <button class="ds-btn" data-variant="primary">✓ Enviar</button>
+            <button class="ds-btn" data-variant="secondary">↺ Recarregar</button>
+            <button class="ds-btn" data-variant="destructive">🗑 Excluir</button>
+            <button class="ds-btn" data-variant="ghost">Ver histórico</button>
+          </div>
+        </article>
+
+        <article class="showcase-block">
+          <h3>Inputs e selects</h3>
+          <div class="showcase-row">
+            <input class="ds-input" placeholder="Buscar por nome ou telefone" />
+            <select class="ds-select">
+              <option>Status: todos</option>
+              <option>Ativos</option>
+              <option>Pendentes</option>
+              <option>Erro</option>
+            </select>
+          </div>
+        </article>
+
+        <article class="showcase-block">
+          <h3>Chips/Badges, Tabs, Cards, Tabela, Tooltip e Modal</h3>
+          <div class="showcase-row">
+            <span class="ds-chip">Filtro ativo</span>
+            <span class="ds-badge" data-tone="success">Sucesso</span>
+            <span class="ds-badge" data-tone="warning">Atenção</span>
+            <span class="ds-badge" data-tone="error">Falha</span>
+          </div>
+          <div class="showcase-row" style="margin-top:8px;">
+            <button class="ds-tab" data-state="active">Tudo</button>
+            <button class="ds-tab">Envios</button>
+            <button class="ds-tab">Respostas</button>
+          </div>
+          <div class="showcase-row" style="margin-top:8px; align-items:flex-start;">
+            <article class="ds-card">
+              <strong>Card de conversa</strong>
+              <p style="margin:6px 0 0; font-size:13px;">Resumo operacional com KPIs e alertas visuais.</p>
+            </article>
+            <span class="ds-tooltip">Tooltip: explicação curta e acionável</span>
+          </div>
+          <div class="showcase-row" style="margin-top:8px;">
+            <div class="table-wrap" style="width:100%;">
+              <table>
+                <thead><tr><th>Canal</th><th>Status</th><th>SLA</th></tr></thead>
+                <tbody><tr><td>Outbound</td><td>Em andamento</td><td>02:31</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="showcase-row" style="margin-top:8px;">
+            <aside class="ds-modal">
+              <strong>Modal padrão</strong>
+              <p style="margin:6px 0 0; font-size:13px;">Usar para decisões irreversíveis e confirmações de fluxo crítico.</p>
+            </aside>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>2) Matriz oficial de variantes e estados</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Componente</th><th>Variantes</th><th>Estados obrigatórios</th><th>Diretriz de implementação</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Botão</td><td>primário, secundário, destrutivo, fantasma</td><td>default, hover, active, disabled, loading, erro</td><td>Nunca aplicar cor hardcoded por contexto; sempre mapear para token semântico.</td></tr>
+            <tr><td>Input/Select</td><td>padrão, erro</td><td>default, hover, active/focus, disabled, loading, erro</td><td>Feedback de validação deve aparecer no mesmo bloco e com microcopy objetiva.</td></tr>
+            <tr><td>Chip/Badge</td><td>neutro, sucesso, warning, erro</td><td>default, hover, active, disabled</td><td>Usar chips para contexto curto; badge para status persistente.</td></tr>
+            <tr><td>Tabs</td><td>primária (ativa), neutra</td><td>default, hover, active, disabled</td><td>Tab ativa precisa ter contraste elevado e prioridade visual clara.</td></tr>
+            <tr><td>Card/Tabela</td><td>padrão, destaque operacional</td><td>default, hover, active, loading, erro</td><td>Dados críticos devem priorizar legibilidade e densidade controlada.</td></tr>
+            <tr><td>Tooltip/Modal</td><td>informativo, crítico</td><td>default, active, disabled (ação), loading, erro</td><td>Tooltip curto (&lt;90 caracteres); modal com CTA primário + ação segura.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>3) Estados visuais de referência (exemplos)</h2>
+      <div class="showcase-row">
+        <button class="ds-btn" data-variant="primary" data-state="default">Default</button>
+        <button class="ds-btn" data-variant="primary" data-state="hover">Hover</button>
+        <button class="ds-btn" data-variant="primary" data-state="active">Active</button>
+        <button class="ds-btn" data-variant="primary" data-state="disabled">Disabled</button>
+        <button class="ds-btn" data-variant="primary" data-state="loading">Loading</button>
+        <button class="ds-btn" data-variant="primary" data-state="error">Erro</button>
+      </div>
+      <div class="showcase-row" style="margin-top:10px;">
+        <input class="ds-input" data-state="default" value="Input default" />
+        <input class="ds-input" data-state="disabled" value="Input disabled" />
+        <input class="ds-input" data-state="error" value="Input com erro" />
+      </div>
+    </section>
+
+    <section>
+      <h2>4) Ícones e microcopy para feedback de ação</h2>
+      <div class="microcopy-grid">
+        <article class="microcopy-card">
+          <strong>Regras de ícones</strong>
+          <ul>
+            <li>Biblioteca única em SVG (16px padrão / 12px inline).</li>
+            <li>Nunca misturar emoji e ícone SVG em produção.</li>
+            <li>Mapeamento fixo: sucesso(✓), aviso(!), erro(×), info(i), loading(spinner).</li>
+          </ul>
+        </article>
+        <article class="microcopy-card">
+          <strong>Microcopy — enviar mensagem</strong>
+          <code>loading: "Enviando mensagem..."</code>
+          <code>success: "Mensagem enviada com sucesso."</code>
+          <code>error: "Falha ao enviar. Revise conexão e tente novamente."</code>
+        </article>
+        <article class="microcopy-card">
+          <strong>Microcopy — filtros e consulta</strong>
+          <code>loading: "Atualizando resultados..."</code>
+          <code>empty: "Nenhum registro encontrado para este filtro."</code>
+          <code>error: "Não foi possível carregar resultados agora."</code>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>5) Tokens visuais centralizados</h2>
+      <div class="token-grid">
+        <article class="token-card">
+          <h3>Cores semânticas</h3>
+          <ul>
+            <li><span class="swatch" style="--sw:#f58220"></span>--ds-color-primary</li>
+            <li><span class="swatch" style="--sw:#7a4a21"></span>--ds-color-secondary</li>
+            <li><span class="swatch" style="--sw:#a12b2b"></span>--ds-color-destructive / --ds-color-error</li>
+            <li><span class="swatch" style="--sw:#1f8c4f"></span>--ds-color-success</li>
+            <li><span class="swatch" style="--sw:#b25c00"></span>--ds-color-warning</li>
+          </ul>
+        </article>
+        <article class="token-card">
+          <h3>Tipografia e espaçamento</h3>
+          <ul>
+            <li>Fonte única: --ds-font-family</li>
+            <li>Escala: 12 / 14 / 16 / 20</li>
+            <li>Espaçamento: 4 / 8 / 12 / 16 / 24</li>
+            <li>Nunca usar valores arbitrários fora da escala.</li>
+          </ul>
+        </article>
+        <article class="token-card">
+          <h3>Bordas, raio e elevação</h3>
+          <ul>
+            <li>Raio: --ds-radius-sm/md/lg/pill</li>
+            <li>Sombra: --ds-shadow-1 e --ds-shadow-2</li>
+            <li>Borda semântica: --ds-color-border e --ds-color-border-strong</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>6) Exemplos por contexto operacional</h2>
+      <div class="context-grid">
+        <article class="context-card">
+          <h3>Triagem de inbound</h3>
+          <ul>
+            <li>Botão primário: "Responder".</li>
+            <li>Badge sucesso para entregas concluídas.</li>
+            <li>Tooltip com regra de SLA da fila.</li>
+          </ul>
+        </article>
+        <article class="context-card">
+          <h3>Campanha outbound</h3>
+          <ul>
+            <li>Botão secundário para "Pré-visualizar" e primário para "Disparar".</li>
+            <li>Estado loading obrigatório durante envio em lote.</li>
+            <li>Microcopy de erro orientado à próxima ação.</li>
+          </ul>
+        </article>
+        <article class="context-card">
+          <h3>Falha operacional crítica</h3>
+          <ul>
+            <li>Modal crítico com botão destrutivo apenas para confirmação final.</li>
+            <li>Ícone de erro + badge vermelha para eventos bloqueantes.</li>
+            <li>Mensagem curta: o que aconteceu + como resolver.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

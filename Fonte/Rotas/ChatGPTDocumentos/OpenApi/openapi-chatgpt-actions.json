@@ -1,0 +1,656 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "AplicacoesOnline - Documentos ISO 9001",
+    "description": "Action para listar e ler documentos das pastas configuradas no servidor.",
+    "version": "v4"
+  },
+  "servers": [
+    {
+      "url": "https://api.redutoresibr.com.br",
+      "description": "Base URL oficial (HTTPS obrigatório). Requisições em HTTP podem ser rejeitadas pela borda até o redirecionamento estar ativo."
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    },
+    "schemas": {
+      "StatusResponse": {
+        "type": "object",
+        "properties": {
+          "serverTimeUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "roots": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "root": {
+                  "type": "string"
+                },
+                "exists": {
+                  "type": "boolean"
+                },
+                "hasFiles": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "FilesResponse": {
+        "type": "object",
+        "properties": {
+          "totalFiles": {
+            "type": "integer"
+          },
+          "offset": {
+            "type": "integer"
+          },
+          "limitRequested": {
+            "type": "integer"
+          },
+          "limitApplied": {
+            "type": "integer"
+          },
+          "returnedFiles": {
+            "type": "integer"
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "nextOffset": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Caminho completo do arquivo."
+                },
+                "fileName": {
+                  "type": "string"
+                },
+                "relativePath": {
+                  "type": "string"
+                },
+                "extension": {
+                  "type": "string",
+                  "description": "Extensão do arquivo listado (somente .pdf é retornado pelo filtro atual)."
+                },
+                "sizeBytes": {
+                  "type": "integer"
+                },
+                "lastWriteTimeUtc": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          },
+          "sortBy": {
+            "type": "string",
+            "enum": [
+              "name",
+              "modified"
+            ]
+          },
+          "sortDirection": {
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          }
+        }
+      },
+      "FileContentResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "extension": {
+            "type": "string"
+          },
+          "sizeBytes": {
+            "type": "integer"
+          },
+          "content": {
+            "type": "string"
+          },
+          "contentEncoding": {
+            "type": "string",
+            "enum": [
+              "utf-8",
+              "base64"
+            ]
+          },
+          "chunkOffset": {
+            "type": "integer",
+            "description": "Offset solicitado para o bloco retornado."
+          },
+          "chunkSizeBytes": {
+            "type": "integer",
+            "description": "Quantidade de bytes no bloco retornado."
+          },
+          "hasMoreContent": {
+            "type": "boolean",
+            "description": "Indica se ainda existe conteúdo após o bloco atual."
+          },
+          "nextOffset": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "Próximo offset para continuar a leitura quando hasMoreContent = true."
+          },
+          "maxBytesRequested": {
+            "type": "integer",
+            "description": "Valor de maxBytes recebido na requisição."
+          },
+          "maxBytesApplied": {
+            "type": "integer",
+            "description": "Tamanho de bloco efetivamente aplicado após validação de limites no servidor e do transporte da Action."
+          }
+        }
+      },
+      "FileTextResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "extension": {
+            "type": "string"
+          },
+          "textLengthChars": {
+            "type": "integer"
+          },
+          "chunkOffset": {
+            "type": "integer"
+          },
+          "chunkSizeChars": {
+            "type": "integer"
+          },
+          "hasMoreContent": {
+            "type": "boolean"
+          },
+          "nextOffset": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "maxCharsRequested": {
+            "type": "integer"
+          },
+          "maxCharsApplied": {
+            "type": "integer"
+          },
+          "content": {
+            "type": "string"
+          },
+          "contentEncoding": {
+            "type": "string",
+            "enum": [
+              "utf-8"
+            ]
+          },
+          "note": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "warningCode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Código de aviso técnico quando a paginação é inválida, por exemplo offset além do fim do texto."
+          },
+          "traceId": {
+            "type": "string",
+            "description": "Identificador da requisição para correlação com logs."
+          }
+        }
+      },
+      "SearchFilesResponse": {
+        "type": "object",
+        "properties": {
+          "term": {
+            "type": "string"
+          },
+          "totalFiles": {
+            "type": "integer"
+          },
+          "offset": {
+            "type": "integer"
+          },
+          "limitRequested": {
+            "type": "integer"
+          },
+          "limitApplied": {
+            "type": "integer"
+          },
+          "returnedFiles": {
+            "type": "integer"
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "nextOffset": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Caminho completo do arquivo."
+                },
+                "fileName": {
+                  "type": "string"
+                },
+                "relativePath": {
+                  "type": "string"
+                },
+                "extension": {
+                  "type": "string",
+                  "description": "Extensão do arquivo listado (somente .pdf é retornado pelo filtro atual)."
+                },
+                "sizeBytes": {
+                  "type": "integer"
+                },
+                "lastWriteTimeUtc": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          },
+          "sortBy": {
+            "type": "string",
+            "enum": [
+              "name",
+              "modified"
+            ]
+          },
+          "sortDirection": {
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "errorCode": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "detail": {
+            "type": "string"
+          },
+          "hint": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "traceId": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "paths": {
+    "/api/documents/status": {
+      "get": {
+        "operationId": "getDocumentsStatus",
+        "summary": "Valida acesso às pastas configuradas",
+        "responses": {
+          "200": {
+            "description": "Status das raízes de documentos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/documents/files": {
+      "get": {
+        "operationId": "listDocumentsFiles",
+        "summary": "Lista arquivos PDF com filtro nativo de ruído, paginação e ordenação previsível",
+        "responses": {
+          "200": {
+            "description": "Lista de arquivos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FilesResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 200,
+              "maximum": 1000
+            },
+            "description": "Quantidade máxima de arquivos retornados por página."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Posição inicial da paginação."
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "name",
+                "modified"
+              ],
+              "default": "name"
+            },
+            "description": "Ordenação da listagem: por nome/caminho relativo (name) ou por data de modificação (modified)."
+          },
+          {
+            "name": "sortDirection",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "Direção da ordenação."
+          }
+        ]
+      }
+    },
+    "/api/documents/file-content": {
+      "get": {
+        "operationId": "getDocumentFileContent",
+        "summary": "Lê o conteúdo de um arquivo pelo id (caminho completo de arquivo)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Use somente um id de ARQUIVO retornado por /api/documents/files (não envie caminho de pasta)."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Posição inicial (em bytes) para leitura paginada do arquivo."
+          },
+          {
+            "name": "maxBytes",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 65536
+            },
+            "description": "Tamanho máximo do bloco retornado (em bytes). Valor máximo lógico no servidor: 1048576; para arquivos binários, o servidor pode reduzir automaticamente para evitar payload excessivo na Action."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Conteúdo do arquivo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileContentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parâmetro inválido (id ausente, diretório informado no lugar de arquivo, offset/maxBytes inválidos)"
+          },
+          "404": {
+            "description": "Arquivo não encontrado nas pastas permitidas"
+          }
+        }
+      }
+    },
+    "/api/documents/file-text": {
+      "get": {
+        "operationId": "getDocumentFileText",
+        "summary": "Extrai texto de arquivos suportados (inclui PDF com camada de texto) e retorna em blocos por caracteres",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Use somente um id de ARQUIVO retornado por /api/documents/files."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Posição inicial (em caracteres) para leitura paginada do texto extraído."
+          },
+          {
+            "name": "maxChars",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 30000
+            },
+            "description": "Quantidade máxima de caracteres por resposta. O servidor aplica teto de 120000."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Texto extraído do arquivo. Se o offset ultrapassar o fim do texto, a resposta continua 200 com content vazio, hasMoreContent=false e warningCode=offset_beyond_text_length.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileTextResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parâmetro inválido ou extração de texto indisponível para o arquivo.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Arquivo não encontrado nas pastas permitidas.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "X-API-Key ausente ou inválido.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/documents/search": {
+      "get": {
+        "operationId": "searchDocumentsFiles",
+        "summary": "Busca arquivos PDF por termo/código sem varrer tudo no cliente",
+        "parameters": [
+          {
+            "name": "term",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Termo para buscar no nome do arquivo PDF ou no caminho relativo (ex.: PO 010)."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 200,
+              "maximum": 1000
+            },
+            "description": "Quantidade máxima de arquivos retornados por página."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Posição inicial da paginação."
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "name",
+                "modified"
+              ],
+              "default": "name"
+            },
+            "description": "Ordenação da busca: por nome/caminho relativo (name) ou por data de modificação (modified)."
+          },
+          {
+            "name": "sortDirection",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "Direção da ordenação."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resultado da busca de arquivos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchFilesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
